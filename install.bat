@@ -8,25 +8,25 @@ cd /d "%~dp0"
 cd ..
 
 echo Applying patches...
-git apply SVI_PLUGIN/wgp.patch
+git apply wan2gp-svi/wgp.patch
 if errorlevel 1 (
     echo WARNING: wgp.patch may have failed - check manually
 )
 
-git apply SVI_PLUGIN/any2video.patch
+git apply wan2gp-svi/any2video.patch
 if errorlevel 1 (
     echo WARNING: any2video.patch may have failed - check manually
 )
 
-git apply SVI_PLUGIN/model.patch
+git apply wan2gp-svi/model.patch
 if errorlevel 1 (
     echo WARNING: model.patch may have failed - check manually
 )
 
 echo.
 echo Copying profile files...
-copy "SVI_PLUGIN\profiles\SVI-Shot Infinite - 50 Steps.json" "loras\wan_i2v\"
-copy "SVI_PLUGIN\profiles\SVI-2.0 Unified - 50 Steps.json" "loras\wan_i2v\"
+copy "wan2gp-svi\profiles\SVI-Shot Infinite - 50 Steps.json" "loras\wan_i2v\"
+copy "wan2gp-svi\profiles\SVI-2.0 Unified - 50 Steps.json" "loras\wan_i2v\"
 
 echo.
 echo ===================================

@@ -17,20 +17,20 @@ SVI (Stable Video Infinity) fixes this by:
 ## Installation
 
 ### Option 1: Run installer (Windows)
-1. Copy the `SVI_PLUGIN` folder into your WanGP directory
+1. Copy the `wan2gp-svi` folder into your WanGP directory
 2. Run `install.bat`
 
 ### Option 2: Manual install
 1. Apply the patches:
    ```
    cd WanGP
-   git apply SVI_PLUGIN/wgp.patch
-   git apply SVI_PLUGIN/any2video.patch
-   git apply SVI_PLUGIN/model.patch
+   git apply wan2gp-svi/wgp.patch
+   git apply wan2gp-svi/any2video.patch
+   git apply wan2gp-svi/model.patch
    ```
 2. Copy profiles to loras folder:
    ```
-   copy "SVI_PLUGIN/profiles/*.json" "loras/wan_i2v/"
+   copy "wan2gp-svi/profiles/*.json" "loras/wan_i2v/"
    ```
 
 ## Usage
