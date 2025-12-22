@@ -1,0 +1,22 @@
+diff --git a/models/wan/modules/model.py b/models/wan/modules/model.py
+index 5d302d4..51efdef 100644
+--- a/models/wan/modules/model.py
++++ b/models/wan/modules/model.py
+@@ -961,6 +961,17 @@ class WanModel(ModelMixin, ConfigMixin):
+                 new_sd[k] = v 
+             sd = new_sd
+ 
++        if first.startswith("pipe.dit."):
++            # SVI LoRA format (DiffSynth-Studio): pipe.dit.blocks.X.cross_attn.k.lora_A.weight
++            new_sd = {}
++            print("Converting SVI/DiffSynth LoRA format (pipe.dit.) to WanGP format")
++            for k, v in sd.items():
++                # Convert pipe.dit. to diffusion_model.
++                k = k.replace("pipe.dit.", "diffusion_model.")
++                new_sd[k] = v
++            sd = new_sd
++            first = next(iter(sd), None)
++
+         if first.startswith("lora_unet_"):
+             new_sd = {}
+             print("Converting Lora Safetensors format to Lora Diffusers format")

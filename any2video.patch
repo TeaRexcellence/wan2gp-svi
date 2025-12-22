@@ -1,0 +1,61 @@
+diff --git a/models/wan/any2video.py b/models/wan/any2video.py
+index 9235f60..ab7620a 100644
+--- a/models/wan/any2video.py
++++ b/models/wan/any2video.py
+@@ -602,10 +602,35 @@ class WanAny2V:
+                         img_end_frame,
+                 ], dim=1).to(self.device)
+             else:
+-                enc= torch.concat([
+-                        control_video,
+-                        torch.zeros( (3, frame_num-control_pre_frames_count, height, width), device=self.device, dtype= self.VAE_dtype)
+-                ], dim=1).to(self.device)
++                # SVI Mode: Support reference frame padding for motion frames
++                svi_mode = bbargs.get('svi_mode', False)
++                svi_ref_pad_num = bbargs.get('svi_ref_pad_num', 0)
++                svi_random_ref_frame = bbargs.get('svi_random_ref_frame', None)
++                remaining_frames = frame_num - control_pre_frames_count
++
++                if svi_mode and svi_ref_pad_num != 0 and svi_random_ref_frame is not None:
++                    # SVI reference padding: pad motion frames with reference instead of zeros
++                    ref_frame = svi_random_ref_frame.unsqueeze(1).to(device=self.device, dtype=self.VAE_dtype)
++                    if svi_ref_pad_num == -1:
++                        # Full reference: repeat for all remaining frames
++                        vae_input_pad = ref_frame.repeat(1, remaining_frames, 1, 1)
++                    else:
++                        # Partial: first N frames use ref, rest zeros
++                        ref_count = min(svi_ref_pad_num, remaining_frames)
++                        ref_frames = ref_frame.repeat(1, ref_count, 1, 1)
++                        if remaining_frames > ref_count:
++                            zero_frames = torch.zeros((3, remaining_frames - ref_count, height, width), device=self.device, dtype=self.VAE_dtype)
++                            vae_input_pad = torch.cat([ref_frames, zero_frames], dim=1)
++                        else:
++                            vae_input_pad = ref_frames
++                    enc = torch.concat([control_video, vae_input_pad], dim=1).to(self.device)
++                    print(f"[SVI Encoding] Using ref_pad_num={svi_ref_pad_num} for {remaining_frames} motion frames")
++                else:
++                    # Standard: pad with zeros
++                    enc= torch.concat([
++                            control_video,
++                            torch.zeros( (3, remaining_frames, height, width), device=self.device, dtype= self.VAE_dtype)
++                    ], dim=1).to(self.device)
+ 
+             image_start = image_end = img_end_frame = image_ref = control_video = None
+ 
+@@ -617,7 +642,15 @@ class WanAny2V:
+                 else:
+                     msk = torch.concat([ torch.repeat_interleave(msk[:, 0:1], repeats=4, dim=1), msk[:, 1:] ], dim=1)
+             else:
+-                msk[:, control_pre_frames_count:] = 0
++                # SVI Mode: When ref_pad_cfg=False, only first frame gets mask=1 (SVI default)
++                # When ref_pad_cfg=True, all control frames get mask=1 (standard Wan2GP behavior)
++                svi_ref_pad_cfg = bbargs.get('svi_ref_pad_cfg', False)
++                if svi_mode and not svi_ref_pad_cfg:
++                    # SVI default: only first frame masked, regardless of control_pre_frames_count
++                    msk[:, 1:] = 0
++                else:
++                    # Standard: all control frames masked
++                    msk[:, control_pre_frames_count:] = 0
+                 msk = torch.concat([ torch.repeat_interleave(msk[:, 0:1], repeats=4, dim=1), msk[:, 1:] ], dim=1)
+             msk = msk.view(1, msk.shape[1] // 4, 4, lat_h, lat_w)
+             msk = msk.transpose(1, 2)[0]

@@ -1,0 +1,89 @@
+diff --git a/wgp.py b/wgp.py
+index bc88f23..2912cdc 100644
+--- a/wgp.py
++++ b/wgp.py
+@@ -602,6 +602,10 @@ def validate_settings(state, model_type, single_prompt, inputs):
+     sliding_window_size = inputs["sliding_window_size"]
+     sliding_window_overlap = inputs["sliding_window_overlap"]
+     sliding_window_discard_last_frames = inputs["sliding_window_discard_last_frames"]
++    svi_mode = inputs.get("svi_mode", False)
++    svi_ref_pad_num = inputs.get("svi_ref_pad_num", 0)
++    svi_num_motion_frames = inputs.get("svi_num_motion_frames", 1)
++    svi_ref_pad_cfg = inputs.get("svi_ref_pad_cfg", False)  # If True, all motion frames get mask=1; if False, only first frame
+     video_length = inputs["video_length"]
+     num_inference_steps= inputs["num_inference_steps"]
+     skip_steps_cache_type= inputs["skip_steps_cache_type"]
+@@ -5041,6 +5045,10 @@ def generate_video(
+     model_type,
+     mode,
+     plugin_data=None,
++    svi_mode=False,
++    svi_ref_pad_num=0,
++    svi_num_motion_frames=1,
++    svi_ref_pad_cfg=False,
+ ):
+ 
+ 
+@@ -5234,12 +5242,22 @@ def generate_video(
+         if video_source is not None:
+             current_video_length +=  sliding_window_overlap - 1
+         sliding_window = current_video_length > sliding_window_size
+-        reuse_frames = min(sliding_window_size - latent_size, sliding_window_overlap) 
++        reuse_frames = min(sliding_window_size - latent_size, sliding_window_overlap)
+     else:
+         sliding_window = False
+         sliding_window_size = current_video_length
+         reuse_frames = 0
+ 
++    # SVI Mode: Stable Video Infinity for infinite-length video generation
++    svi_random_ref_frame = None  # Store original reference frame for SVI mask padding
++    if svi_mode:
++        print(f"[SVI Mode] Enabled with motion_frames={svi_num_motion_frames}, ref_pad_num={svi_ref_pad_num}")
++        # SVI uses clip-chaining with decoded frames, not latent overlap
++        # Force sliding window behavior for multi-clip generation
++        if sliding_window_size == 0:
++            sliding_window_size = 81  # Default SVI clip size
++        sliding_window = current_video_length > sliding_window_size
++
+     original_image_refs = image_refs
+     image_refs = None if image_refs is None else ([] + image_refs) # work on a copy as it is going to be modified
+     # image_refs = None
+@@ -5816,6 +5834,10 @@ def generate_video(
+                     pace=pace,
+                     temperature=temperature,
+                     window_start_frame_no = window_start_frame,
++                    svi_mode = svi_mode,
++                    svi_ref_pad_num = svi_ref_pad_num,
++                    svi_random_ref_frame = svi_random_ref_frame,
++                    svi_ref_pad_cfg = svi_ref_pad_cfg,
+                 )
+             except Exception as e:
+                 if len(control_audio_tracks) > 0 or len(source_audio_tracks) > 0:
+@@ -5905,7 +5927,26 @@ def generate_video(
+                         if generated_audio is not None:
+                             generated_audio = truncate_audio(generated_audio, 0, discard_last_frames, fps, audio_sampling_rate)
+ 
+-                    if reuse_frames == 0:
++                    # SVI Mode: Use clip chaining with decoded frames instead of latent overlap
++                    if svi_mode:
++                        # Store the original reference frame for VAE padding (only on first window)
++                        if window_no == 1 and svi_random_ref_frame is None:
++                            svi_random_ref_frame = sample[:, 0].clone()
++
++                        # Extract last N motion frames as conditioning for next clip
++                        # This is the core SVI clip-chaining mechanism
++                        pre_video_guide = sample[:, -svi_num_motion_frames:].clone()
++
++                        # For SVI: discard motion frames from output (except final clip)
++                        # This prevents frame duplication at clip boundaries
++                        if window_no < total_windows:
++                            sample = sample[:, :-svi_num_motion_frames]
++                            guide_start_frame -= svi_num_motion_frames
++
++                        # SVI doesn't use latent overlap - set to None
++                        overlapped_latents = None
++                        print(f"[SVI Mode] Clip {window_no}/{total_windows} complete, chaining with {svi_num_motion_frames} motion frame(s)")
++                    elif reuse_frames == 0:
+                         pre_video_guide =  sample[:,max_source_video_frames :].clone()
+                     else:
+                         pre_video_guide =  sample[:, -reuse_frames:].clone()
