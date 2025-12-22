@@ -1,5 +1,5 @@
 diff --git a/wgp.py b/wgp.py
-index bc88f23..2912cdc 100644
+index bc88f23..8c445a3 100644
 --- a/wgp.py
 +++ b/wgp.py
 @@ -602,6 +602,10 @@ def validate_settings(state, model_type, single_prompt, inputs):
@@ -87,3 +87,41 @@ index bc88f23..2912cdc 100644
                          pre_video_guide =  sample[:,max_source_video_frames :].clone()
                      else:
                          pre_video_guide =  sample[:, -reuse_frames:].clone()
+@@ -5917,10 +5958,11 @@ def generate_video(
+                     guide_start_frame -= source_video_overlap_frames_count 
+                     if generated_audio is not None:
+                         generated_audio = truncate_audio(generated_audio, source_video_overlap_frames_count, 0, fps, audio_sampling_rate)
+-                elif sliding_window and window_no > 1 and reuse_frames > 0:
++                elif sliding_window and window_no > 1 and reuse_frames > 0 and not svi_mode:
+                     # remove sliding window overlapped frames at the beginning of the generation
++                    # Skip for SVI mode - motion frames already handled above
+                     sample = sample[: , reuse_frames:]
+-                    guide_start_frame -= reuse_frames 
++                    guide_start_frame -= reuse_frames
+                     if generated_audio is not None:
+                         generated_audio = truncate_audio(generated_audio, reuse_frames, 0, fps, audio_sampling_rate)
+ 
+@@ -7710,6 +7752,10 @@ def save_inputs(
+             sliding_window_color_correction_strength,
+             sliding_window_overlap_noise,
+             sliding_window_discard_last_frames,
++            svi_mode,
++            svi_ref_pad_num,
++            svi_num_motion_frames,
++            svi_ref_pad_cfg,
+             image_refs_relative_size,
+             remove_background_images_ref,
+             temporal_upsampling,
+@@ -9303,6 +9349,12 @@ def generate_video_tab(update_form = False, state_dict = None, ui_defaults = Non
+                             sliding_window_overlap_noise = gr.Slider(0, 150, value=ui_get("sliding_window_overlap_noise",20 if vace else 0), step=1, label="Noise to be added to overlapped frames to reduce blur effect" , visible = vace, show_reset_button= False)
+                             sliding_window_discard_last_frames = gr.Slider(0, 20, value=ui_get("sliding_window_discard_last_frames"), step=4, label="Discard Last Frames of a Window (that may have bad quality)", visible = True, show_reset_button= False)
+ 
++                        # SVI (Stable Video Infinity) hidden parameters - loaded from profile JSON
++                        svi_mode = gr.Checkbox(value=ui_get("svi_mode", False), visible=False)
++                        svi_ref_pad_num = gr.Number(value=ui_get("svi_ref_pad_num", 0), visible=False)
++                        svi_num_motion_frames = gr.Number(value=ui_get("svi_num_motion_frames", 1), visible=False)
++                        svi_ref_pad_cfg = gr.Checkbox(value=ui_get("svi_ref_pad_cfg", False), visible=False)
++
+                         video_prompt_type_alignment = gr.Dropdown(
+                             choices=[
+                                 ("Aligned to the beginning of the Source Video", ""),
