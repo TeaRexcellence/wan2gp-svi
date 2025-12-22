@@ -37,10 +37,10 @@ SVI (Stable Video Infinity) fixes this by:
 
 1. Launch WanGP: `python wgp.py`
 2. Select **Wan2.1** > **Image2Video 14B**
-3. Choose profile: **"SVI-Shot Infinite - 50 Steps"**
+3. Choose profile: **"SVI-Shot Infinite - 50 Steps"** or **"SVI-2.0 Unified - 50 Steps"**
 4. Click **Apply**
 5. Add a **Start Image**
-6. Set **Number of frames** to **162+** (must be >81 to trigger multi-clip)
+6. Set **Number of frames** to **162+** (for example: Must be set greater than 81 to trigger multi-clip if sliding window is set to 81)
 7. Enter your prompt
 8. Click **Generate**
 
