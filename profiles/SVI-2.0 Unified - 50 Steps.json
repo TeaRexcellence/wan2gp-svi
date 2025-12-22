@@ -14,7 +14,7 @@
     "sliding_window_overlap_noise": 0,
     "sliding_window_discard_last_frames": 0,
     "svi_mode": true,
-    "svi_ref_pad_num": 0,
+    "svi_ref_pad_num": -1,
     "svi_num_motion_frames": 5,
     "svi_ref_pad_cfg": false,
     "help": "SVI 2.0 Unified: 5 motion frames for creative transitions. Better for dynamic scenes with camera motion."
