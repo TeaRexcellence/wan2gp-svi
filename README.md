@@ -53,14 +53,7 @@ The SVI LoRA (~2.3GB) will auto-download on first use.
 | **SVI-Shot Infinite** | 1 | Stable, drift-free, consistent scenes |
 | **SVI-2.0 Unified** | 5 | More creative transitions, dynamic scenes |
 
-Start with **SVI-Shot** for testing - it's more stable.
-
-## Tips
-
-- **Steps**: 50 is recommended, but 25-30 works for faster testing
-- **Frames**: 81 = 1 clip, 162 = 2 clips, 243 = 3 clips, etc.
-- **Prompt**: Describe consistent motion (e.g., "slowly moves", "steady camera")
-- Watch console for `[SVI Mode]` messages confirming it's active
+Suggesting to start with **SVI-Shot** for testing - it's more stable.
 
 ### SVI-Shot (1 motion frame):
   - Passes only the last frame to the next clip
@@ -74,6 +67,13 @@ Start with **SVI-Shot** for testing - it's more stable.
   - Allows more dynamic movement and scene evolution
   - Better for: action scenes, camera pans, gradual scene changes
   - Inherits motion dynamics of SVI-Film while retaining stability of SVI-Shot
+  
+## Tips
+
+- **Steps**: 50 is recommended, but 25-30 works for faster testing
+- **Frames**: 81 = 1 clip, 162 = 2 clips, 243 = 3 clips, etc.
+- **Prompt**: Describe consistent motion (e.g., "slowly moves", "steady camera")
+- Watch console for `[SVI Mode]` messages confirming it's active
 
 ## How It Works
 
