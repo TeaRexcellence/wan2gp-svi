@@ -62,6 +62,19 @@ Start with **SVI-Shot** for testing - it's more stable.
 - **Prompt**: Describe consistent motion (e.g., "slowly moves", "steady camera")
 - Watch console for `[SVI Mode]` messages confirming it's active
 
+### SVI-Shot (1 motion frame):
+  - Passes only the last frame to the next clip
+  - Creates tighter continuity - almost like a seamless loop
+  - Best for: talking heads, static backgrounds, consistent scenes
+  - Less creative freedom but maximum stability
+
+### SVI-2.0 Unified (5 motion frames):
+  - Passes last 5 frames to the next clip
+  - Gives the model more motion context
+  - Allows more dynamic movement and scene evolution
+  - Better for: action scenes, camera pans, gradual scene changes
+  - Inherits motion dynamics of SVI-Film while retaining stability of SVI-Shot
+
 ## How It Works
 
 Standard sliding window:
