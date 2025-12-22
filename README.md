@@ -102,6 +102,49 @@ Clip 1 --[pixel frames]--> Clip 2 --[pixel frames]--> Clip 3
 - **WanGP**: [DeepBeepMeep](https://github.com/deepbeepmeep/Wan2GP)
 - **Integration**: This patch
 
+## Troubleshooting
+
+**Patches failed to apply?**
+- Make sure you're using the latest WanGP version the patches were built for
+- If WanGP updated, the patches may need to be regenerated
+- You can try `git apply --3way` for better conflict handling
+
+**No SVI profiles showing?**
+- Profiles must be in `loras/wan_i2v/` folder, NOT `profiles/`
+- Make sure you selected **Wan2.1 > Image2Video 14B** (not Wan2.2)
+
+**"[SVI Mode]" not appearing in console?**
+- Check that `svi_mode: true` is set in the profile JSON
+- Make sure total frames > sliding window size (e.g., 162 > 81)
+
+**Video still has drift?**
+- Ensure you're using the SVI LoRA (auto-downloads on first run)
+- Try SVI-Shot profile instead of SVI-2.0 for more stability
+
+## Updating WanGP
+
+After updating WanGP, you'll need to re-apply the patches:
+
+```bash
+cd WanGP
+git apply wan2gp-svi/wgp.patch
+git apply wan2gp-svi/any2video.patch
+git apply wan2gp-svi/model.patch
+```
+
+If patches fail due to conflicts, you may need updated patches for the new WanGP version.
+
+## Uninstall
+
+To remove SVI and restore original WanGP:
+
+```bash
+cd WanGP
+git checkout wgp.py
+git checkout models/wan/any2video.py
+git checkout models/wan/modules/model.py
+```
+
 ## License
 
 Same as WanGP - for research/personal use.
