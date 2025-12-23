@@ -27,18 +27,18 @@ echo.
 echo Copying Wan 2.1 profile files...
 copy "wan2gp-svi\profiles\SVI-Shot Infinite - 50 Steps.json" "loras\wan_i2v\"
 copy "wan2gp-svi\profiles\SVI-2.0 Unified - 50 Steps.json" "loras\wan_i2v\"
-copy "wan2gp-svi\profiles\SVI-Shot Infinite + FusioniX - 10 Steps.json" "loras\wan_i2v\"
-copy "wan2gp-svi\profiles\SVI-2.0 Unified + FusioniX - 10 Steps.json" "loras\wan_i2v\"
-copy "wan2gp-svi\profiles\SVI-Shot Infinite + LightX2V - 4 Steps.json" "loras\wan_i2v\"
-copy "wan2gp-svi\profiles\SVI-2.0 Unified + LightX2V - 4 Steps.json" "loras\wan_i2v\"
+copy "wan2gp-svi\profiles\SVI-Shot Infinite + FusioniX - Min 10 Steps.json" "loras\wan_i2v\"
+copy "wan2gp-svi\profiles\SVI-2.0 Unified + FusioniX - Min 10 Steps.json" "loras\wan_i2v\"
+copy "wan2gp-svi\profiles\SVI-Shot Infinite + LightX2V - Min 4 Steps.json" "loras\wan_i2v\"
+copy "wan2gp-svi\profiles\SVI-2.0 Unified + LightX2V - Min 4 Steps.json" "loras\wan_i2v\"
 
 echo.
 echo Copying Wan 2.2 profile files...
 if not exist "profiles\wan_2_2" mkdir "profiles\wan_2_2"
 copy "wan2gp-svi\profiles\wan_2_2\SVI-Shot Infinite - 50 Steps.json" "profiles\wan_2_2\"
 copy "wan2gp-svi\profiles\wan_2_2\SVI-2.0 Unified - 50 Steps.json" "profiles\wan_2_2\"
-copy "wan2gp-svi\profiles\wan_2_2\SVI-Shot Infinite + Lightning - 4 Steps.json" "profiles\wan_2_2\"
-copy "wan2gp-svi\profiles\wan_2_2\SVI-2.0 Unified + Lightning - 4 Steps.json" "profiles\wan_2_2\"
+copy "wan2gp-svi\profiles\wan_2_2\SVI-Shot Infinite + Lightning - Min 4 Steps.json" "profiles\wan_2_2\"
+copy "wan2gp-svi\profiles\wan_2_2\SVI-2.0 Unified + Lightning - Min 4 Steps.json" "profiles\wan_2_2\"
 
 echo.
 echo ===================================
