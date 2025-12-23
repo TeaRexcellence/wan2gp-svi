@@ -2,6 +2,8 @@
 
 Generate **infinite-length videos** without drift or degradation using the SVI LoRA and clip-chaining technique.
 
+**Supports both Wan 2.1 and Wan 2.2 Image2Video models.**
+
 ## What is SVI?
 
 Standard WanGP sliding windows blend clips in latent space, which causes:
@@ -28,23 +30,39 @@ SVI (Stable Video Infinity) fixes this by:
    git apply wan2gp-svi/any2video.patch
    git apply wan2gp-svi/model.patch
    ```
-2. Copy profiles to loras folder:
+2. Copy profiles:
    ```
+   # Wan 2.1 profiles
    copy "wan2gp-svi/profiles/*.json" "loras/wan_i2v/"
+
+   # Wan 2.2 profiles
+   mkdir "profiles/wan_2_2"
+   copy "wan2gp-svi/profiles/wan_2_2/*.json" "profiles/wan_2_2/"
    ```
 
 ## Usage
 
+### Wan 2.1
 1. Launch WanGP: `python wgp.py`
 2. Select **Wan2.1** > **Image2Video 14B**
 3. Choose profile: **"SVI-Shot Infinite - 50 Steps"** or **"SVI-2.0 Unified - 50 Steps"**
 4. Click **Apply**
 5. Add a **Start Image**
-6. Set **Number of frames** to **162+** (for example: Must be set greater than 81 to trigger multi-clip if sliding window is set to 81)
+6. Set **Number of frames** to **162+** (must be greater than 81 to trigger multi-clip)
 7. Enter your prompt
 8. Click **Generate**
 
-The SVI LoRA (~2.3GB) will auto-download on first use.
+### Wan 2.2
+1. Launch WanGP: `python wgp.py`
+2. Select **Wan2.2** > **Image2Video 14B**
+3. Choose profile: **"SVI-Shot Infinite - 50 Steps"** or **"SVI-2.0 Unified - 50 Steps"**
+4. Click **Apply**
+5. Add a **Start Image**
+6. Set **Number of frames** to **162+** (must be greater than 81 to trigger multi-clip)
+7. Enter your prompt
+8. Click **Generate**
+
+The SVI LoRAs will auto-download on first use (~2.3GB for Wan 2.1, ~2.5GB total for Wan 2.2).
 
 ## Profiles
 
@@ -110,8 +128,9 @@ Clip 1 --[pixel frames]--> Clip 2 --[pixel frames]--> Clip 3
 - You can try `git apply --3way` for better conflict handling
 
 **No SVI profiles showing?**
-- Profiles must be in `loras/wan_i2v/` folder, NOT `profiles/`
-- Make sure you selected **Wan2.1 > Image2Video 14B** (not Wan2.2)
+- For Wan 2.1: Profiles must be in `loras/wan_i2v/` folder
+- For Wan 2.2: Profiles must be in `profiles/wan_2_2/` folder
+- Make sure you selected the correct model (Wan2.1 or Wan2.2 > Image2Video 14B)
 
 **"[SVI Mode]" not appearing in console?**
 - Check that `svi_mode: true` is set in the profile JSON

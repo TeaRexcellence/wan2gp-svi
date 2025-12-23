@@ -1,0 +1,21 @@
+{
+    "activated_loras": [
+        "https://huggingface.co/vita-video-gen/svi-model/resolve/main/version-2.0/SVI_Wan2.2-I2V-A14B_high_noise_lora_v2.0.safetensors",
+        "https://huggingface.co/vita-video-gen/svi-model/resolve/main/version-2.0/SVI_Wan2.2-I2V-A14B_low_noise_lora_v2.0.safetensors"
+    ],
+    "loras_multipliers": "1;0 0;1",
+    "num_inference_steps": 50,
+    "guidance_phases": 2,
+    "guidance_scale": 1.5,
+    "guidance2_scale": 1.5,
+    "flow_shift": 5,
+    "sliding_window_size": 81,
+    "sliding_window_overlap": 1,
+    "sliding_window_overlap_noise": 0,
+    "sliding_window_discard_last_frames": 0,
+    "svi_mode": true,
+    "svi_ref_pad_num": -1,
+    "svi_num_motion_frames": 1,
+    "svi_ref_pad_cfg": false,
+    "help": "SVI-Shot for Wan 2.2: Single motion frame for stable, drift-free infinite video. Best for consistent scenes."
+}
