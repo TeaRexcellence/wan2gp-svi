@@ -111,3 +111,4 @@ git checkout wgp.py models/wan/any2video.py models/wan/modules/model.py
 
 - [Stable Video Infinity](https://github.com/vita-epfl/Stable-Video-Infinity) by VITA@EPFL
 - [WanGP](https://github.com/deepbeepmeep/Wan2GP) by DeepBeepMeep
+- [SVI + LightX2V guidance](https://github.com/vita-epfl/Stable-Video-Infinity/tree/svi_wan22#12-10-2025-important-notes-on-using-lightx2v-with-svi) for accelerator LoRA settings
