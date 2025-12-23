@@ -1,5 +1,5 @@
 diff --git a/wgp.py b/wgp.py
-index c0acb56..819f621 100644
+index c0acb56..fad0889 100644
 --- a/wgp.py
 +++ b/wgp.py
 @@ -602,6 +602,10 @@ def validate_settings(state, model_type, single_prompt, inputs):
@@ -50,7 +50,24 @@ index c0acb56..819f621 100644
      original_image_refs = image_refs
      image_refs = None if image_refs is None else ([] + image_refs) # work on a copy as it is going to be modified
      # image_refs = None
-@@ -5837,6 +5857,10 @@ def generate_video(
+@@ -5460,8 +5480,14 @@ def generate_video(
+                 break
+             window_no += 1
+             gen["window_no"] = window_no
+-            return_latent_slice = None 
+-            if reuse_frames > 0:                
++
++            # SVI Mode: Use different seed for each window to prevent repetitive patterns
++            if svi_mode and window_no > 1:
++                seed = set_seed(-1)
++                print(f"[SVI Mode] Window {window_no}: Using new seed {seed}")
++
++            return_latent_slice = None
++            if reuse_frames > 0:
+                 return_latent_slice = slice(-(reuse_frames - 1 + discard_last_frames ) // latent_size - 1, None if discard_last_frames == 0 else -(discard_last_frames // latent_size) )
+             refresh_preview  = {"image_guide" : image_guide, "image_mask" : image_mask} if image_mode >= 1 else {}
+ 
+@@ -5837,6 +5863,10 @@ def generate_video(
                      pace=pace,
                      temperature=temperature,
                      window_start_frame_no = window_start_frame,
@@ -61,7 +78,7 @@ index c0acb56..819f621 100644
                  )
              except Exception as e:
                  if len(control_audio_tracks) > 0 or len(source_audio_tracks) > 0:
-@@ -5926,7 +5950,26 @@ def generate_video(
+@@ -5926,7 +5956,26 @@ def generate_video(
                          if generated_audio is not None:
                              generated_audio = truncate_audio(generated_audio, 0, discard_last_frames, fps, audio_sampling_rate)
  
@@ -89,7 +106,7 @@ index c0acb56..819f621 100644
                          pre_video_guide =  sample[:,max_source_video_frames :].clone()
                      else:
                          pre_video_guide =  sample[:, -reuse_frames:].clone()
-@@ -5938,10 +5981,11 @@ def generate_video(
+@@ -5938,10 +5987,11 @@ def generate_video(
                      guide_start_frame -= source_video_overlap_frames_count 
                      if generated_audio is not None:
                          generated_audio = truncate_audio(generated_audio, source_video_overlap_frames_count, 0, fps, audio_sampling_rate)
@@ -103,7 +120,7 @@ index c0acb56..819f621 100644
                      if generated_audio is not None:
                          generated_audio = truncate_audio(generated_audio, reuse_frames, 0, fps, audio_sampling_rate)
  
-@@ -7737,6 +7781,10 @@ def save_inputs(
+@@ -7737,6 +7787,10 @@ def save_inputs(
              sliding_window_color_correction_strength,
              sliding_window_overlap_noise,
              sliding_window_discard_last_frames,
@@ -114,7 +131,7 @@ index c0acb56..819f621 100644
              image_refs_relative_size,
              remove_background_images_ref,
              temporal_upsampling,
-@@ -9331,6 +9379,12 @@ def generate_video_tab(update_form = False, state_dict = None, ui_defaults = Non
+@@ -9331,6 +9385,12 @@ def generate_video_tab(update_form = False, state_dict = None, ui_defaults = Non
                              sliding_window_overlap_noise = gr.Slider(0, 150, value=ui_get("sliding_window_overlap_noise",20 if vace else 0), step=1, label="Noise to be added to overlapped frames to reduce blur effect" , visible = vace, show_reset_button= False)
                              sliding_window_discard_last_frames = gr.Slider(0, 20, value=ui_get("sliding_window_discard_last_frames"), step=4, label="Discard Last Frames of a Window (that may have bad quality)", visible = True, show_reset_button= False)
  

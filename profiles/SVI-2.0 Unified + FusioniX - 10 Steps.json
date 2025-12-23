@@ -1,0 +1,22 @@
+{
+    "activated_loras": [
+        "https://huggingface.co/vita-video-gen/svi-model/resolve/main/version-2.0/SVI_Wan2.1-I2V-14B_lora_v2.0.safetensors",
+        "https://huggingface.co/DeepBeepMeep/Wan2.1/resolve/main/loras_accelerators/Wan2.1_I2V_14B_FusionX_LoRA.safetensors"
+    ],
+    "loras_multipliers": "1 0.5",
+    "num_inference_steps": 10,
+    "guidance_phases": 1,
+    "guidance_scale": 1,
+    "alt_guidance_scale": 1,
+    "audio_guidance_scale": 1,
+    "flow_shift": 5,
+    "sliding_window_size": 81,
+    "sliding_window_overlap": 5,
+    "sliding_window_overlap_noise": 0,
+    "sliding_window_discard_last_frames": 0,
+    "svi_mode": true,
+    "svi_ref_pad_num": -1,
+    "svi_num_motion_frames": 5,
+    "svi_ref_pad_cfg": false,
+    "help": "SVI 2.0 + FusioniX accelerated: 10 steps, FusioniX at 0.5 strength, CFG 1 for accelerated mode."
+}

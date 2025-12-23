@@ -1,0 +1,26 @@
+{
+    "activated_loras": [
+        "https://huggingface.co/vita-video-gen/svi-model/resolve/main/version-2.0/SVI_Wan2.2-I2V-A14B_high_noise_lora_v2.0.safetensors",
+        "https://huggingface.co/vita-video-gen/svi-model/resolve/main/version-2.0/SVI_Wan2.2-I2V-A14B_low_noise_lora_v2.0.safetensors",
+        "https://huggingface.co/DeepBeepMeep/Wan2.2/resolve/main/loras_accelerators/Wan2.2_I2V_A14B_HIGH_4steps_lora_rank64_Seko_V1_forKJ.safetensors",
+        "https://huggingface.co/DeepBeepMeep/Wan2.2/resolve/main/loras_accelerators/Wan2.2_I2V_A14B_LOW_4steps_lora_rank64_Seko_V1_forKJ.safetensors"
+    ],
+    "loras_multipliers": "1;0 0;1 0.5;0 0;1",
+    "num_inference_steps": 4,
+    "guidance_phases": 2,
+    "guidance_scale": 1.5,
+    "guidance2_scale": 1.5,
+    "switch_threshold": 876,
+    "model_switch_phase": 1,
+    "flow_shift": 3,
+    "sample_solvers": "euler",
+    "sliding_window_size": 81,
+    "sliding_window_overlap": 5,
+    "sliding_window_overlap_noise": 0,
+    "sliding_window_discard_last_frames": 0,
+    "svi_mode": true,
+    "svi_ref_pad_num": -1,
+    "svi_num_motion_frames": 5,
+    "svi_ref_pad_cfg": false,
+    "help": "SVI 2.0 + Lightning accelerated: 4 steps. Lightning 0.5 high-noise / 1.0 low-noise per SVI team recommendation."
+}
